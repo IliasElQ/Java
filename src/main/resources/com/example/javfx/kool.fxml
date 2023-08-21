@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label text="Patient Details" />
+        <Label fx:id="nameLabel" />
+        <Label text="Age: " />
+        <DatePicker fx:id="date1_Input" />
+        <DatePicker fx:id="date2_Input" />
+        <TextField fx:id="rem_Input" promptText="Enter Remarque" />
+        <HBox>
+            <Button text="Add" onAction="#Add_button" />
+            <Button text="Upload Image" onAction="#uploadImage" />
+        </HBox>
+        <TableView fx:id="detailsTableView">
+            <columns>
+                <TableColumn text="Date 1">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="date1" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Remarque">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="remarque" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Date 2">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="date2" />
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
+        </TableView>
+        <HBox>
+            <ListView fx:id="imageListView" prefWidth="200.0" />
+            <ImageView fx:id="loadedImageView" fitHeight="300.0" fitWidth="300.0" />
+        </HBox>
+    </children>
+</VBox>

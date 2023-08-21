@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="646.0" prefWidth="870.0" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javfx.SceneController">
+   <children>
+      <Button fx:id="Mybutton" layoutX="100.0" layoutY="124.0" mnemonicParsing="false" onAction="#switchToScene2" prefHeight="55.0" prefWidth="150.0" style="-fx-background-color: #CE34CE;" text="Nv Patient">
+         <font>
+            <Font name="Bodoni MT Condensed Bold Italic" size="13.0" />
+         </font></Button>
+      <Button layoutX="100.0" layoutY="241.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="150.0" style="-fx-background-color: #CE34CE;" text="Base des clients">
+         <font>
+            <Font name="System Bold" size="30.0" />
+         </font></Button>
+      <Button layoutX="100.0" layoutY="370.0" mnemonicParsing="false" onAction="#switchToScene3" prefHeight="55.0" prefWidth="150.0" style="-fx-background-color: #e84ee8;" text="Calendrier" />
+      <VBox fx:id="notificationBox" layoutX="408.0" layoutY="124.0" prefHeight="429.0" prefWidth="399.0" />
+   </children>
+</AnchorPane>

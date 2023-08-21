@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="680.0" prefWidth="893.0" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javfx.Controller">
+    <children>
+        <TableView fx:id="tableView" layoutY="64.0" prefHeight="618.0" prefWidth="978.0">
+            <columns>
+                <TableColumn fx:id="id_column" prefWidth="28.79998743534088" text="ID" />
+                <TableColumn fx:id="name_column" text="Name" />
+                <TableColumn fx:id="prenam_column" prefWidth="106.39998626708984" text="Prenom" />
+            <TableColumn fx:id="sex_column" prefWidth="40.0" text="Sexe" />
+                <TableColumn fx:id="tmaladie_column" prefWidth="47.20001220703125" text="T.Maladie" />
+                <TableColumn fx:id="ttreat_column" prefWidth="57.5999755859375" text="trau ou ortho" />
+                <TableColumn fx:id="Jconsulation_column" prefWidth="132.7999267578125" text="J_consultation" />
+                <TableColumn fx:id="remarque_column" prefWidth="259.2000732421875" text="Remarque" />
+                <TableColumn fx:id="vide1_column" prefWidth="36.7999267578125" text="vide" />
+            <TableColumn fx:id="vide2_column" prefWidth="43.2000732421875" text="vide" />
+            </columns>
+        </TableView>
+        <Button layoutX="24.0" layoutY="14.0" mnemonicParsing="false" onAction="#switchToScene1" text="Back" />
+    </children>
+</AnchorPane>

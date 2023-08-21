@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="612.0" prefWidth="871.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javfx.PatientDetailsController">
+    <children>
+      <TabPane fx:id="tabPane" prefHeight="612.0" prefWidth="871.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Details">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="60.0" layoutY="51.0" text="Patient Details">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="rem_Input" layoutX="49.0" layoutY="93.0" prefHeight="155.0" prefWidth="210.0" promptText="Remarque" />
+                        <DatePicker fx:id="date1_Input" layoutX="66.0" layoutY="265.0" promptText="Synchronized Date" />
+                        <DatePicker fx:id="date2_Input" layoutX="66.0" layoutY="319.0" promptText="Next Appointment Date" />
+                        <VBox layoutX="293.0" layoutY="93.0" prefHeight="370.0" prefWidth="541.0">
+                           <children>
+                              <VBox fx:id="notificationBox" prefHeight="370.0" prefWidth="540.0">
+                                 <children>
+                                    <TableView fx:id="detailsTableView" editable="true" prefHeight="370.0" prefWidth="542.0">
+                                       <columns>
+                                          <TableColumn fx:id="date1_Column" prefWidth="108.0" text="Date 1" />
+                                          <TableColumn fx:id="remarque_Column" prefWidth="344.80010986328125" text="Remarque" />
+                                          <TableColumn fx:id="date2_Column" prefWidth="87.199951171875" text="Date 2" />
+                                       </columns>
+                                    </TableView>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                        <Button fx:id="Add_buttom" layoutX="125.0" layoutY="414.0" mnemonicParsing="false" onAction="#Add_button" text="ADD" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <!-- ... Other parts of the FXML ... -->
+
+            <Tab fx:id="imageTab" text="Add Image">
+               <content>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="newImageNameField" layoutX="54.0" layoutY="124.0" promptText="Enter Image Name" />
+                        <Button fx:id="addImageButton" layoutX="69.0" layoutY="179.0" mnemonicParsing="false" onAction="#uploadImage" text="Add Image" />
+                        <ImageView fx:id="loadedImageView" fitHeight="563.0" fitWidth="609.0" layoutX="251.0" layoutY="9.0" />
+                        <Button fx:id="chooseImageButton" layoutX="37.0" layoutY="53.0" mnemonicParsing="false" onAction="#chooseImage" text="Choose Image" />
+                        <ListView fx:id="imageListView" layoutX="29.0" layoutY="235.0" prefHeight="200.0" prefWidth="214.0" />
+                        <ImageView fx:id="imageUploaderView" fitHeight="114.0" fitWidth="174.0" layoutX="55.0" layoutY="458.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+
+
+            <!-- ... Rest of the FXML ... -->
+
+        </tabs>
+      </TabPane>
+    </children>
+</AnchorPane>
