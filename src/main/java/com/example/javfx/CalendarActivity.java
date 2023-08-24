@@ -4,13 +4,11 @@ import java.time.ZonedDateTime;
 
 public class CalendarActivity {
     private ZonedDateTime date;
-    private String clientName;
-    private Integer serviceNo;
 
-    public CalendarActivity(ZonedDateTime date, String clientName, Integer serviceNo) {
+
+    public CalendarActivity(ZonedDateTime date) {
         this.date = date;
-        this.clientName = clientName;
-        this.serviceNo = serviceNo;
+
     }
 
     public ZonedDateTime getDate() {
@@ -21,28 +19,11 @@ public class CalendarActivity {
         this.date = date;
     }
 
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public Integer getServiceNo() {
-        return serviceNo;
-    }
-
-    public void setServiceNo(Integer serviceNo) {
-        this.serviceNo = serviceNo;
-    }
 
     @Override
     public String toString() {
         return "CalenderActivity{" +
                 "date=" + date +
-                ", clientName='" + clientName + '\'' +
-                ", serviceNo=" + serviceNo +
                 '}';
     }
 }
