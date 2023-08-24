@@ -76,11 +76,6 @@ public class PatientDetails {
 
 
 
-
-
-
-
-
 }
 
 

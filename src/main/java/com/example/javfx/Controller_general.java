@@ -22,11 +22,6 @@ import java.util.ResourceBundle;
 
 public class Controller_general implements Initializable {
 
-
-
-
-
-
     @FXML
     private TextField searchInput;
     @FXML
@@ -43,7 +38,6 @@ public class Controller_general implements Initializable {
     private DatePicker DateInput;
     @FXML
     private RadioButton maleRadioButton;
-
     @FXML
     private RadioButton femaleRadioButton;
     @FXML
@@ -68,14 +62,9 @@ public class Controller_general implements Initializable {
     private ToggleGroup genderToggleGroup;
     @FXML
     private TableColumn<Patient, Void> detailsButtonColumn;
-
-
     @FXML
     private TableView<Patient> tableView;
     private final ObservableList<Patient> patients = FXCollections.observableArrayList();
-
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -118,11 +107,6 @@ public class Controller_general implements Initializable {
             }
         });
 
-
-
-
-
-
         ObservableList<String> Typedemaladie = FXCollections.observableArrayList("Type A", "Type B", "Type C");
         T_of_maladie.setItems(Typedemaladie);
         IdColumn.setCellValueFactory(new PropertyValueFactory<>("Id_nat"));
@@ -146,7 +130,7 @@ public class Controller_general implements Initializable {
                         resultSet.getString("prenam"),
                         resultSet.getInt("age"),
                         resultSet.getInt("phone"),
-                        resultSet.getDate("date").toLocalDate(), // Convert java.sql.Date to java.time.LocalDate
+                        resultSet.getDate("date").toLocalDate(), 
                         resultSet.getString("gender"),
                         resultSet.getString("type_maladie")
                 );
@@ -160,25 +144,17 @@ public class Controller_general implements Initializable {
 
     }
 
-
-
-
-
-
-
     @FXML
     void Button_on_click(ActionEvent event) {
 
         RadioButton selectedRadioButton = (RadioButton) genderToggleGroup.getSelectedToggle();
         String mygender = selectedRadioButton == null ? null : selectedRadioButton.getText();
 
-        // Check if any required field is empty or contains non-numeric value
         Patient patient = null;
         if (IdInput.getText().isEmpty() || NomInput.getText().isEmpty() || PrenomInput.getText().isEmpty() ||
                 AgeInput.getText().isEmpty() || NumberInput.getText().isEmpty() || mygender == null ||
                 T_of_maladie.getValue() == null || DateInput.getValue() == null) {
 
-            // Show an alert indicating missing information
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Missing Information");
             alert.setHeaderText(null);
@@ -186,7 +162,6 @@ public class Controller_general implements Initializable {
             alert.showAndWait();
         } else if (isNumeric(AgeInput.getText()) || isNumeric(NumberInput.getText())) {
 
-            // Show an alert for non-numeric input
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Invalid Input");
             alert.setHeaderText(null);
@@ -196,22 +171,20 @@ public class Controller_general implements Initializable {
             java.time.LocalDate selectedDate = DateInput.getValue();
             if (selectedDate != null) {
                 java.sql.Date date = java.sql.Date.valueOf(selectedDate);
-                //int year = date.toLocalDate().getYear();
                 patient = new Patient(
                         IdInput.getText(),
                         NomInput.getText(),
                         PrenomInput.getText(),
                         Integer.parseInt(AgeInput.getText()),
                         Integer.parseInt(NumberInput.getText()),
-                        date.toLocalDate(), // Use the selected date
+                        date.toLocalDate(), 
                         mygender,
                         T_of_maladie.getValue()
                 );
                 patients.add(patient);
                 resetFields(null);
             } else {
-                // Handle the case when the date is not selected
-                Alert alert = new Alert(Alert.AlertType.ERROR);
+\                Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Missing Date");
                 alert.setHeaderText(null);
                 alert.setContentText("Please select a date.");
@@ -220,18 +193,11 @@ public class Controller_general implements Initializable {
         }
         addPatientToDatabase(patient);
 
-
     }
 
-
-    // Helper method to check if a string is numeric
     private boolean isNumeric(String str) {
         return !str.matches("-?\\d+(\\.\\d+)?");
     }
-
-
-
-
 
     private int clickCount = 0;
     private Patient lastClickedPatient = null;
@@ -255,7 +221,6 @@ public class Controller_general implements Initializable {
                 NumberInput.setText(String.valueOf(clickedPatient.getPhone()));
                 DateInput.setValue(clickedPatient.getDate());
 
-                // Assuming genderToggleGroup contains the RadioButton objects
                 if (clickedPatient.getGender().equals("male")) {
                     maleRadioButton.setSelected(true);
                 } else if (clickedPatient.getGender().equals("female")) {
@@ -263,7 +228,7 @@ public class Controller_general implements Initializable {
                 }
                 T_of_maladie.setValue(clickedPatient.getType_maladie());
 
-                clickCount = 0; // Reset the click count
+                clickCount = 0; 
             }
         }
     }
@@ -277,12 +242,10 @@ public class Controller_general implements Initializable {
         PrenomInput.clear();
         AgeInput.clear();
         NumberInput.clear();
-        DateInput.setValue(null); // Clear the DatePicker value
+        DateInput.setValue(null); 
 
-        // Reset the ChoiceBox to its default value
         T_of_maladie.getSelectionModel().clearSelection();
 
-        // Clear the selected toggle in the ToggleGroup (radio buttons)
         genderToggleGroup.selectToggle(null);
     }
 
@@ -291,7 +254,6 @@ public class Controller_general implements Initializable {
                 PrenomInput.getText().isEmpty() || AgeInput.getText().isEmpty() ||
                 NumberInput.getText().isEmpty() || genderToggleGroup.getSelectedToggle() == null ||
                 T_of_maladie.getValue() == null) {
-            // Show an alert indicating missing information
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Missing Information");
             alert.setHeaderText(null);
@@ -299,7 +261,6 @@ public class Controller_general implements Initializable {
             alert.showAndWait();
             return false;
         } else if (isNumeric(AgeInput.getText()) || isNumeric(NumberInput.getText())) {
-            // Show an alert for non-numeric input
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Invalid Input");
             alert.setHeaderText(null);
@@ -326,7 +287,7 @@ public class Controller_general implements Initializable {
                 selectedPatient.setGender(mygender);
                 selectedPatient.setType_maladie(T_of_maladie.getValue());
 
-                tableView.refresh(); // Refresh TableView to reflect the changes
+                tableView.refresh(); 
                 resetFields(null);
             }
             updatePatientInDatabase(selectedPatient);
@@ -347,7 +308,7 @@ public class Controller_general implements Initializable {
     void searchAction(ActionEvent event) {
         String query = searchInput.getText().trim().toLowerCase();
         if (query.isEmpty()) {
-            tableView.setItems(patients); // Show all patients if query is empty
+            tableView.setItems(patients); 
         } else {
             ObservableList<Patient> filteredPatients = patients.filtered(patient ->
                     patient.getId_nat().toLowerCase().contains(query) ||
@@ -394,13 +355,9 @@ public class Controller_general implements Initializable {
     }
 
 
-
-
-
-
     private void updatePatientInDatabase(Patient patient) {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/patient_database", "root", "myroot2468")) {
-            connection.setAutoCommit(false); // Disable autocommit before starting the transaction
+            connection.setAutoCommit(false); 
 
             String sql = "UPDATE patient SET name=?, prenam=?, age=?, phone=?, date=?, gender=?, type_maladie=? WHERE id_nat=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -415,9 +372,7 @@ public class Controller_general implements Initializable {
 
             preparedStatement.executeUpdate();
 
-            connection.commit(); // Commit the transaction
-
-            // Re-enable autocommit after committing the transaction
+            connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -438,7 +393,6 @@ public class Controller_general implements Initializable {
         }
     }
 
-
     private Stage stage;
     private Scene scene;
     private Parent root;
@@ -451,24 +405,6 @@ public class Controller_general implements Initializable {
         stage.show();
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -89,11 +89,6 @@ public class Patient extends Button {
     }
 
 
-
-    // Getters and setters for all fields
-    // ...
-
-    // Getters for property objects
     public StringProperty remarqueProperty() {
         return remarqueProperty;
     }
