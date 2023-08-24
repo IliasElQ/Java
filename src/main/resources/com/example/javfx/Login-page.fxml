@@ -5,11 +5,13 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javfx.Login_controller">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.javfx.Login_controller" style="-fx-background-color: #f4f4f4;">
   <children>
-    <TextField fx:id="tf_addr" layoutX="334.0" layoutY="81.0" />
-    <TextField fx:id="tf_pass" layoutX="334.0" layoutY="174.0" />
-    <Button layoutX="383.0" layoutY="255.0" mnemonicParsing="false" onAction="#login" text="Button" />
-      <Label fx:id="lb_check" layoutX="316.0" layoutY="17.0" prefHeight="43.0" prefWidth="233.0" />
+    <Label layoutX="233.0" layoutY="68.0" text="Adresse email" />
+    <TextField fx:id="tf_addr" layoutX="233.0" layoutY="93.0" prefWidth="134.0" />
+    <Label layoutX="233.0" layoutY="161.0" text="Mot de passe" />
+    <TextField fx:id="tf_pass" layoutX="233.0" layoutY="186.0" prefWidth="134.0" />
+    <Button layoutX="266.0" layoutY="237.0" mnemonicParsing="false" onAction="#login" text="Se connecter" style="-fx-background-color: #007bff; -fx-text-fill: white;" />
+    <Label fx:id="lb_check" layoutX="233.0" layoutY="302.0" prefWidth="134.0" textAlignment="CENTER" />
   </children>
 </AnchorPane>
