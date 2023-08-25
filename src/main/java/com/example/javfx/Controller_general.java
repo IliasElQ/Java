@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 
 public class Controller_general implements Initializable {
 
+    // Éléments FXML
     @FXML
     private TextField searchInput;
     @FXML
@@ -64,28 +65,35 @@ public class Controller_general implements Initializable {
     private TableColumn<Patient, Void> detailsButtonColumn;
     @FXML
     private TableView<Patient> tableView;
+    
+    // Liste observable pour stocker les patients
     private final ObservableList<Patient> patients = FXCollections.observableArrayList();
+    
+    // Méthode d'initialisation appelée lors du chargement de la vue
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-
+        
+        // Configuration de la colonne "Détails" du tableau
         detailsButtonColumn.setCellFactory(param -> new TableCell<>() {
             private final Button detailsButton = new Button("Details");
 
             {
                 detailsButton.setOnAction(event -> {
+                    // Action lorsque le bouton "Détails" est cliqué
                     Patient patient = getTableView().getItems().get(getIndex());
 
                     try {
+                        // Charger la vue des détails du patient
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("patient_details.fxml"));
                         Parent root = loader.load();
                         Scene newScene = new Scene(root);
 
-                        // Get the controller for the patient details scene
+                        // Obtenir le contrôleur de la vue des détails du patient
                         PatientDetailsController detailsController = loader.getController();
-                        detailsController.initData(patient); // Pass the patient object
+                        detailsController.initData(patient); // Passer l'objet patient
 
-                        // Create a new stage for the new scene
+                        // Créer une nouvelle fenêtre pour la nouvelle scène
                         Stage newStage = new Stage();
                         newStage.setScene(newScene);
                         newStage.show();
@@ -118,11 +126,18 @@ public class Controller_general implements Initializable {
         GenderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
         DateColumn21.setCellValueFactory(new PropertyValueFactory<>("type_maladie"));
         tableView.setItems(patients);
+        // Récupération des données de la base de données et ajout dans la liste observable
         try {
+            // Établir une connexion à la base de données
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/patient_database", "root", "myroot2468");
             String sql = "SELECT * FROM patient";
+            // Préparer la requête SQL
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            
+            // Exécuter la requête SQL et obtenir le résultat
             ResultSet resultSet = preparedStatement.executeQuery();
+
+            // Parcourir le résultat et ajouter les patients dans la liste observable
             while (resultSet.next()) {
                 Patient patient = new Patient(
                         resultSet.getString("id_nat"),
@@ -136,6 +151,8 @@ public class Controller_general implements Initializable {
                 );
                 patients.add(patient);
             }
+            
+            // Fermer la connexion à la base de données
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -147,30 +164,41 @@ public class Controller_general implements Initializable {
     @FXML
     void Button_on_click(ActionEvent event) {
 
+        // Récupération du bouton radio sélectionné pour le genre
         RadioButton selectedRadioButton = (RadioButton) genderToggleGroup.getSelectedToggle();
         String mygender = selectedRadioButton == null ? null : selectedRadioButton.getText();
 
+        // Initialisation d'un objet Patient
         Patient patient = null;
+        // Vérification des champs requis et validation des entrées
         if (IdInput.getText().isEmpty() || NomInput.getText().isEmpty() || PrenomInput.getText().isEmpty() ||
                 AgeInput.getText().isEmpty() || NumberInput.getText().isEmpty() || mygender == null ||
                 T_of_maladie.getValue() == null || DateInput.getValue() == null) {
 
+            // Affichage d'une alerte en cas de champs manquants
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Missing Information");
+            alert.setTitle("Information manquante");
             alert.setHeaderText(null);
-            alert.setContentText("Please fill in all the required fields.");
+            alert.setContentText("Veuillez remplir tous les champs obligatoires.");
             alert.showAndWait();
         } else if (isNumeric(AgeInput.getText()) || isNumeric(NumberInput.getText())) {
-
+            
+            // Affichage d'une alerte en cas de valeurs non numériques
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Invalid Input");
+            alert.setTitle("Entrée invalide");
             alert.setHeaderText(null);
-            alert.setContentText("Please enter valid numeric values for Age and Phone fields.");
+            alert.setContentText("Veuillez entrer des valeurs numériques valides pour l'âge et le numéro de téléphone.");
             alert.showAndWait();
         } else {
+            
+            // Conversion de la date sélectionnée en objet LocalDate
             java.time.LocalDate selectedDate = DateInput.getValue();
             if (selectedDate != null) {
+                
+                // Conversion de la date LocalDate en java.sql.Date
                 java.sql.Date date = java.sql.Date.valueOf(selectedDate);
+
+                // Création d'un nouvel objet Patient avec les valeurs saisies
                 patient = new Patient(
                         IdInput.getText(),
                         NomInput.getText(),
@@ -181,29 +209,38 @@ public class Controller_general implements Initializable {
                         mygender,
                         T_of_maladie.getValue()
                 );
+
+                // Ajout du patient à la liste et réinitialisation des champs
                 patients.add(patient);
                 resetFields(null);
             } else {
+
+                // Affichage d'une alerte en cas de date manquante
 \                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Missing Date");
+                alert.setTitle("Date manquante");
                 alert.setHeaderText(null);
-                alert.setContentText("Please select a date.");
+                alert.setContentText("Veuillez sélectionner une date.");
                 alert.showAndWait();
             }
         }
+
+        // Ajout du patient à la base de données
         addPatientToDatabase(patient);
 
     }
-
+    
+    // Méthode utilitaire pour vérifier si une chaîne est numérique
     private boolean isNumeric(String str) {
         return !str.matches("-?\\d+(\\.\\d+)?");
     }
 
+    // Compteur de clics et dernier patient cliqué
     private int clickCount = 0;
     private Patient lastClickedPatient = null;
 
     @FXML
     void rowClicked(MouseEvent event) {
+        // Récupération du patient sélectionné
         Patient clickedPatient = tableView.getSelectionModel().getSelectedItem();
         if (clickedPatient != null) {
             if (clickedPatient.equals(lastClickedPatient)) {
@@ -214,6 +251,8 @@ public class Controller_general implements Initializable {
             }
 
             if (clickCount == 4) {
+
+                // Affichage des détails du patient lors de 4 clics successifs
                 IdInput.setText(clickedPatient.getId_nat());
                 NomInput.setText(clickedPatient.getName());
                 PrenomInput.setText(clickedPatient.getPrenam());
@@ -221,6 +260,7 @@ public class Controller_general implements Initializable {
                 NumberInput.setText(String.valueOf(clickedPatient.getPhone()));
                 DateInput.setValue(clickedPatient.getDate());
 
+                // Sélection du genre et du type de maladie du patient
                 if (clickedPatient.getGender().equals("male")) {
                     maleRadioButton.setSelected(true);
                 } else if (clickedPatient.getGender().equals("female")) {
@@ -233,10 +273,11 @@ public class Controller_general implements Initializable {
         }
     }
 
-
+    // Réinitialisation des champs de saisie
     @FXML
     void resetFields(ActionEvent event) {
-        // Clear all text fields
+        
+        // Effacer tous les champs de texte
         IdInput.clear();
         NomInput.clear();
         PrenomInput.clear();
@@ -244,72 +285,89 @@ public class Controller_general implements Initializable {
         NumberInput.clear();
         DateInput.setValue(null); 
 
+        // Effacer la sélection dans la ChoiceBox et les boutons radio
         T_of_maladie.getSelectionModel().clearSelection();
 
         genderToggleGroup.selectToggle(null);
     }
 
+    // Vérification de la validité des données saisies
     private boolean isInputValid() {
         if (IdInput.getText().isEmpty() || NomInput.getText().isEmpty() ||
                 PrenomInput.getText().isEmpty() || AgeInput.getText().isEmpty() ||
                 NumberInput.getText().isEmpty() || genderToggleGroup.getSelectedToggle() == null ||
                 T_of_maladie.getValue() == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Missing Information");
+            alert.setTitle("Information manquante");
             alert.setHeaderText(null);
-            alert.setContentText("Please fill in all the required fields.");
+            alert.setContentText("Veuillez remplir tous les champs obligatoires.");
             alert.showAndWait();
             return false;
         } else if (isNumeric(AgeInput.getText()) || isNumeric(NumberInput.getText())) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Invalid Input");
+            alert.setTitle("Entrée invalide");
             alert.setHeaderText(null);
-            alert.setContentText("Please enter valid numeric values for Age and Phone fields.");
+            alert.setContentText("Veuillez entrer des valeurs numériques valides pour l'âge et le numéro de téléphone.");
             alert.showAndWait();
             return false;
         }
         return true;
     }
 
+    // Mise à jour des informations d'un patient existant
     @FXML
     void updateButton_on_click(ActionEvent event) {
         Patient selectedPatient = tableView.getSelectionModel().getSelectedItem();
         if (selectedPatient != null) {
             if (isInputValid()) {
+
+                // Mise à jour des informations du patient sélectionné
                 selectedPatient.setId_nat(IdInput.getText());
                 selectedPatient.setName(NomInput.getText());
                 selectedPatient.setPrenam(PrenomInput.getText());
                 selectedPatient.setAge(Integer.parseInt(AgeInput.getText()));
                 selectedPatient.setPhone(Integer.parseInt(NumberInput.getText()));
                 selectedPatient.setDate(DateInput.getValue());
+
+                // Mise à jour du genre et du type de maladie
                 RadioButton selectedRadioButton = (RadioButton) genderToggleGroup.getSelectedToggle();
                 String mygender = selectedRadioButton == null ? null : selectedRadioButton.getText();
                 selectedPatient.setGender(mygender);
                 selectedPatient.setType_maladie(T_of_maladie.getValue());
 
+                // Rafraîchissement de la vue du tableau et réinitialisation des champs
                 tableView.refresh(); 
                 resetFields(null);
             }
+
+            // Mise à jour du patient dans la base de données
             updatePatientInDatabase(selectedPatient);
 
 
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("No Patient Selected");
+            alert.setTitle("Aucun patient sélectionné");
             alert.setHeaderText(null);
-            alert.setContentText("Please select a patient to update.");
+            alert.setContentText("Veuillez sélectionner un patient à mettre à jour.");
             alert.showAndWait();
         }
 
 
     }
 
+    // Recherche de patients en fonction des critères saisis
     @FXML
     void searchAction(ActionEvent event) {
+
+        // Récupération de la requête de recherche
         String query = searchInput.getText().trim().toLowerCase();
         if (query.isEmpty()) {
+
+            // Affichage de tous les patients en cas de requête vide
             tableView.setItems(patients); 
         } else {
+
+            // Filtrage des patients en fonction de la requête de recherche
             ObservableList<Patient> filteredPatients = patients.filtered(patient ->
                     patient.getId_nat().toLowerCase().contains(query) ||
                             patient.getName().toLowerCase().contains(query) ||
@@ -321,23 +379,34 @@ public class Controller_general implements Initializable {
         }
     }
 
+    // Suppression d'un patient de la liste et de la base de données
     @FXML
     void removeCustomer(ActionEvent event) {
         Patient selectedPatient = tableView.getSelectionModel().getSelectedItem();
         if (selectedPatient != null) {
+
+            // Récupération de l'indice du patient sélectionné
             int selectedID = tableView.getSelectionModel().getSelectedIndex();
+
+            // Suppression du patient de la liste
             tableView.getItems().remove(selectedID);
+
+            // Suppression du patient de la base de données
             removePatientFromDatabase(selectedPatient);
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("No Patient Selected");
+            alert.setTitle("Aucun patient sélectionné");
             alert.setHeaderText(null);
-            alert.setContentText("Please select a patient to remove.");
+            alert.setContentText("Veuillez sélectionner un patient à supprimer.");
             alert.showAndWait();
         }
     }
+
+    // Ajout d'un patient à la base de données
     private void addPatientToDatabase(Patient patient) {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/patient_database", "root", "myroot2468")) {
+
+            // Préparation de la requête SQL d'insertion
             String sql = "INSERT INTO patient (id_nat, name, prenam, age, phone, date, gender, type_maladie) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, patient.getId_nat());
@@ -354,11 +423,14 @@ public class Controller_general implements Initializable {
         }
     }
 
-
+    // Mise à jour d'un patient dans la base de données
     private void updatePatientInDatabase(Patient patient) {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/patient_database", "root", "myroot2468")) {
-            connection.setAutoCommit(false); 
 
+            // Désactivation de la validation automatique et mise à jour
+            connection.setAutoCommit(false);
+
+            // Préparation de la requête SQL de mise à jour
             String sql = "UPDATE patient SET name=?, prenam=?, age=?, phone=?, date=?, gender=?, type_maladie=? WHERE id_nat=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, patient.getName());
@@ -370,8 +442,9 @@ public class Controller_general implements Initializable {
             preparedStatement.setString(7, patient.getType_maladie());
             preparedStatement.setString(8, patient.getId_nat());
 
-            preparedStatement.executeUpdate();
 
+            // Exécution de la mise à jour et validation
+            preparedStatement.executeUpdate();
             connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
@@ -379,11 +452,11 @@ public class Controller_general implements Initializable {
         }
     }
 
-
-
-
+    // Suppression d'un patient de la base de données
     private void removePatientFromDatabase(Patient patient) {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/patient_database", "root", "myroot2468")) {
+
+            // Préparation de la requête SQL de suppression
             String sql = "DELETE FROM patient WHERE id_nat=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, patient.getId_nat());
@@ -393,6 +466,7 @@ public class Controller_general implements Initializable {
         }
     }
 
+    // Changement de scène vers Scene1.fxml
     private Stage stage;
     private Scene scene;
     private Parent root;
